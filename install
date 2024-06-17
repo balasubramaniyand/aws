@@ -1,0 +1,21 @@
+root@ip-172-31-40-81:~/test/opexwise-ui# docker --version
+Docker version 26.1.4, build 5650f9b
+root@ip-172-31-40-81:~/test/opexwise-ui# docker --version
+Docker version 26.1.4, build 5650f9b
+root@ip-172-31-40-81:~/test/opexwise-ui# systemctl restart docker
+root@ip-172-31-40-81:~/test/opexwise-ui# docker-compose --version
+-bash: /usr/local/bin/docker-compose: Permission denied
+root@ip-172-31-40-81:~/test/opexwise-ui# curl -SL https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 60.1M  100 60.1M    0     0  27.2M      0  0:00:02  0:00:02 --:--:-- 94.3M
+root@ip-172-31-40-81:~/test/opexwise-ui# sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+root@ip-172-31-40-81:~/test/opexwise-ui# docker-compose --version
+-bash: /usr/local/bin/docker-compose: Permission denied
+root@ip-172-31-40-81:~/test/opexwise-ui# which docker-compose
+root@ip-172-31-40-81:~/test/opexwise-ui# whereis docker-compose
+docker-compose: /usr/bin/docker-compose /usr/local/bin/docker-compose
+root@ip-172-31-40-81:~/test/opexwise-ui#
+
+
