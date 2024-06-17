@@ -1,0 +1,5 @@
+root@ip-172-31-40-81:~/test/opexwise-ui# docker-compose version
+docker-compose version 1.29.2, build unknown
+docker-py version: 5.0.3
+CPython version: 3.10.12
+OpenSSL version: OpenSSL 3.0.2 15 Mar 2022
