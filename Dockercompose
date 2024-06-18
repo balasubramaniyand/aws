@@ -1,0 +1,18 @@
+version: '3'
+
+networks:
+  iopex_network:
+    external: true
+
+services:
+  opexwiseui:
+    image: arlo:latest
+    restart: on-failure:5
+    networks:
+      - iopex_network
+    hostname: opexwise-ui-demo
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f nginx || exit 1"]
+      interval: 10m
+      timeout: 10s
+      retries: 3
