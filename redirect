@@ -1,0 +1,14 @@
+root@opexwise-ui-demo:~/test/opexwise-ui# docker  logs 198081aa8e47
+2024/06/18 07:52:29 [emerg] 1#1: unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+nginx: [emerg] unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+2024/06/18 07:52:29 [emerg] 1#1: unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+nginx: [emerg] unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+2024/06/18 07:52:30 [emerg] 1#1: unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+nginx: [emerg] unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+2024/06/18 07:52:30 [emerg] 1#1: unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+nginx: [emerg] unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+2024/06/18 07:52:31 [emerg] 1#1: unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+nginx: [emerg] unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+2024/06/18 07:52:33 [emerg] 1#1: unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+nginx: [emerg] unknown directive "location/" in /etc/nginx/conf.d/default.conf:6
+root@opexwise-ui-demo:~/test/opexwise-ui#
