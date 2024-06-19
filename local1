@@ -1,0 +1,27 @@
+balasubramaniyand@CHNIOPEXL5097:~/ui$ cd opexwise-ui/
+balasubramaniyand@CHNIOPEXL5097:~/ui/opexwise-ui$ ls
+angular.json  dist                Dockerfile     package.json       src                tsconfig.spec.json
+build         docker              e2e            package-lock.json  tsconfig.app.json  tslint.json
+default.conf  docker-compose.yml  karma.conf.js  README.md          tsconfig.json
+balasubramaniyand@CHNIOPEXL5097:~/ui/opexwise-ui$ sudo vi Dockerfile 
+[sudo] password for balasubramaniyand: 
+balasubramaniyand@CHNIOPEXL5097:~/ui/opexwise-ui$ vi default.conf 
+balasubramaniyand@CHNIOPEXL5097:~/ui/opexwise-ui$ cat default.conf 
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/html/opexwise;
+        index  index.html index.htm;
+    }
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+
+balasubramaniyand@CHNIOPEXL5097:~/ui/opexwise-ui
