@@ -1,0 +1,54 @@
+ ✔ Container sso-keycloak-1  Started                                                                                                                0.7s
+root@opexwise-ui-demo:/var/opt/sso# docker-compose ps
+WARN[0000] /var/opt/sso/docker-compose.yml: `version` is obsolete
+NAME             IMAGE      COMMAND                  SERVICE    CREATED          STATUS          PORTS
+sso-postgres-1   postgres   "docker-entrypoint.s…"   postgres   17 seconds ago   Up 15 seconds   0.0.0.0:5431->5432/tcp, :::5431->5432/tcp
+root@opexwise-ui-demo:/var/opt/sso# docker-compose logs
+WARN[0000] /var/opt/sso/docker-compose.yml: `version` is obsolete
+keycloak-1  | Unmatched arguments from index 0: 'sh', '-c', 'kc.sh'
+keycloak-1  | Did you mean: show-config?
+keycloak-1  | Try 'kc.sh --help' for more information on the available options.
+postgres-1  |
+postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+postgres-1  |
+postgres-1  | 2024-06-21 09:47:40.112 UTC [1] LOG:  starting PostgreSQL 16.3 (Debian 16.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2024-06-21 09:47:40.112 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2024-06-21 09:47:40.112 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2024-06-21 09:47:40.120 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2024-06-21 09:47:40.131 UTC [29] LOG:  database system was shut down at 2024-06-21 09:45:33 UTC
+postgres-1  | 2024-06-21 09:47:40.139 UTC [1] LOG:  database system is ready to accept connections
+root@opexwise-ui-demo:/var/opt/sso# cat docker-compose.yml
+version: '3'
+services:
+  postgres:
+      image: postgres
+      ports:
+        - 5431:5432
+      volumes:
+        - ./pg_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: iopex
+        POSTGRES_PASSWORD: password
+  keycloak:
+      image: quay.io/keycloak/keycloak:17.0.1
+      environment:
+        KEYCLOAK_FRONTEND_URL: http://13.126.219.64:8008/auth
+        PROXY_ADDRESS_FORWARDING: "true"
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: iopex
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+        KEYCLOAK_CORS: "true"
+        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+        #JDBC_PARAMS: "ssl=true"
+      ports:
+        - 8008:8080
+      depends_on:
+        - postgres
+      command: ["sh", "-c", "kc.sh build && kc.sh start"]
+root@opexwise-ui-demo:/var/opt/sso#
