@@ -1,112 +1,53 @@
-root@opexwise-ui-demo:/var/opt/sso# docker-compose up
+root@opexwise-ui-demo:/var/opt/sso# docker-compose logs -f
 WARN[0000] /var/opt/sso/docker-compose.yml: `version` is obsolete
-[+] Running 3/3
- ✔ Network sso_default       Created                                                                                                                0.1s
- ✔ Container sso-postgres-1  Created                                                                                                                0.1s
- ✔ Container sso-keycloak-1  Created                                                                                                                0.1s
-Attaching to keycloak-1, postgres-1
+keycloak-1  | Updating the configuration and installing your custom providers, if any. Please wait.
+keycloak-1  | 2024-06-21 10:08:11,828 INFO  [io.quarkus.deployment.QuarkusAugmentor] (main) Quarkus augmentation completed in 8363ms
+keycloak-1  | 2024-06-21 10:08:14,459 INFO  [org.keycloak.quarkus.runtime.hostname.DefaultHostnameProvider] (main) Hostname settings: FrontEnd: <request>, Strict HTTPS: false, Path: <request>, Strict BackChannel: false, Admin: <request>, Port: -1, Proxied: false
+keycloak-1  | 2024-06-21 10:08:15,120 WARN  [org.infinispan.PERSISTENCE] (keycloak-cache-init) ISPN000554: jboss-marshalling is deprecated and planned for removal
+keycloak-1  | 2024-06-21 10:08:15,228 WARN  [org.infinispan.CONFIG] (keycloak-cache-init) ISPN000569: Unable to persist Infinispan internal caches as no global state enabled
+keycloak-1  | 2024-06-21 10:08:15,255 INFO  [org.infinispan.CONTAINER] (keycloak-cache-init) ISPN000556: Starting user marshaller 'org.infinispan.jboss.marshalling.core.JBossUserMarshaller'
+keycloak-1  | 2024-06-21 10:08:15,462 INFO  [org.infinispan.CONTAINER] (keycloak-cache-init) ISPN000128: Infinispan version: Infinispan 'Triskaidekaphobia' 13.0.6.Final
+keycloak-1  | 2024-06-21 10:08:15,815 INFO  [org.keycloak.connections.infinispan.DefaultInfinispanConnectionProviderFactory] (main) Node name: node_590669, Site name: null
+keycloak-1  | 2024-06-21 10:08:16,875 INFO  [org.keycloak.quarkus.runtime.storage.database.liquibase.QuarkusJpaUpdaterProvider] (main) Initializing database schema. Using changelog META-INF/jpa-changelog-master.xml
+keycloak-1  | 2024-06-21 10:08:18,677 INFO  [org.keycloak.services] (main) KC-SERVICES0050: Initializing master realm
+keycloak-1  | 2024-06-21 10:08:20,054 INFO  [io.quarkus] (main) Keycloak 17.0.1 on JVM (powered by Quarkus 2.7.5.Final) started in 8.094s. Listening on: http://0.0.0.0:8080
+keycloak-1  | 2024-06-21 10:08:20,054 INFO  [io.quarkus] (main) Profile dev activated.
+keycloak-1  | 2024-06-21 10:08:20,055 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, jdbc-mariadb, jdbc-mssql, jdbc-mysql, jdbc-oracle, jdbc-postgresql, keycloak, narayana-jta, reactive-routes, resteasy, resteasy-jackson, smallrye-context-propagation, smallrye-health, smallrye-metrics, vault, vertx]
+keycloak-1  | 2024-06-21 10:08:20,056 WARN  [org.keycloak.quarkus.runtime.KeycloakMain] (main) Running the server in development mode. DO NOT use this configuration in production.
+keycloak-1  | 2024-06-21 10:09:29,355 INFO  [io.quarkus] (Shutdown thread) Keycloak stopped in 0.216s
+keycloak-1  | 2024-06-21 10:09:33,245 INFO  [org.keycloak.quarkus.runtime.hostname.DefaultHostnameProvider] (main) Hostname settings: FrontEnd: <request>, Strict HTTPS: false, Path: <request>, Strict BackChannel: false, Admin: <request>, Port: -1, Proxied: false
+keycloak-1  | 2024-06-21 10:09:34,041 WARN  [org.infinispan.PERSISTENCE] (keycloak-cache-init) ISPN000554: jboss-marshalling is deprecated and planned for removal
+keycloak-1  | 2024-06-21 10:09:34,064 WARN  [org.infinispan.CONFIG] (keycloak-cache-init) ISPN000569: Unable to persist Infinispan internal caches as no global state enabled
+keycloak-1  | 2024-06-21 10:09:34,080 INFO  [org.infinispan.CONTAINER] (keycloak-cache-init) ISPN000556: Starting user marshaller 'org.infinispan.jboss.marshalling.core.JBossUserMarshaller'
+keycloak-1  | 2024-06-21 10:09:34,291 INFO  [org.infinispan.CONTAINER] (keycloak-cache-init) ISPN000128: Infinispan version: Infinispan 'Triskaidekaphobia' 13.0.6.Final
 postgres-1  |
 postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
 postgres-1  |
-postgres-1  | 2024-06-21 09:56:58.100 UTC [1] LOG:  starting PostgreSQL 16.3 (Debian 16.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
-postgres-1  | 2024-06-21 09:56:58.100 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-postgres-1  | 2024-06-21 09:56:58.100 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-postgres-1  | 2024-06-21 09:56:58.111 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-postgres-1  | 2024-06-21 09:56:58.122 UTC [30] LOG:  database system was shut down at 2024-06-21 09:56:28 UTC
-postgres-1  | 2024-06-21 09:56:58.130 UTC [1] LOG:  database system is ready to accept connections
-keycloak-1  | Keycloak - Open Source Identity and Access Management
-keycloak-1  |
-keycloak-1  | Find more information at: https://www.keycloak.org/docs/latest
-keycloak-1  |
-keycloak-1  | Usage:
-keycloak-1  |
-keycloak-1  | kc.sh [OPTIONS] [COMMAND]
-keycloak-1  |
-keycloak-1  | Use this command-line tool to manage your Keycloak cluster.
-keycloak-1  | Make sure the command is available on your "PATH" or prefix it with "./" (e.g.:
-keycloak-1  | "./kc.sh") to execute from the current folder.
-keycloak-1  |
-keycloak-1  | Options:
-keycloak-1  |
-keycloak-1  | -cf, --config-file <file>
-keycloak-1  |                      Set the path to a configuration file. By default, configuration properties are
-keycloak-1  |                        read from the "keycloak.conf" file in the "conf" directory.
-keycloak-1  | -h, --help           This help message.
-keycloak-1  | -v, --verbose        Print out error details when running this command.
-keycloak-1  | -V, --version        Show version information
-keycloak-1  |
-keycloak-1  | Commands:
-keycloak-1  |
-keycloak-1  |   build                   Creates a new and optimized server image.
-keycloak-1  |   start                   Start the server.
-keycloak-1  |   start-dev               Start the server in development mode.
-keycloak-1  |   export                  Export data from realms to a file or directory.
-keycloak-1  |   import                  Import data from a directory or a file.
-keycloak-1  |   show-config             Print out the current configuration.
-keycloak-1  |   tools                   Utilities for use and interaction with the server.
-keycloak-1  |     completion            Generate bash/zsh completion script for kc.sh.
-keycloak-1  |
-keycloak-1  | Examples:
-keycloak-1  |
-keycloak-1  |   Start the server in development mode for local development or testing:
-keycloak-1  |
-keycloak-1  |       $ kc.sh start-dev
-keycloak-1  |
-keycloak-1  |   Building an optimized server runtime:
-keycloak-1  |
-keycloak-1  |       $ kc.sh build <OPTIONS>
-keycloak-1  |
-keycloak-1  |   Start the server in production mode:
-keycloak-1  |
-keycloak-1  |       $ kc.sh start <OPTIONS>
-keycloak-1  |
-keycloak-1  |   Enable auto-completion to bash/zsh:
-keycloak-1  |
-keycloak-1  |       $ source <(kc.sh tools completion)
-keycloak-1  |
-keycloak-1  |   Please, take a look at the documentation for more details before deploying in
-keycloak-1  | production.
-keycloak-1  |
-keycloak-1  | Use "kc.sh start --help" for the available options when starting the server.
-keycloak-1  | Use "kc.sh <command> --help" for more information about other commands.
-keycloak-1 exited with code 0
-^CGracefully stopping... (press Ctrl+C again to force)
-[+] Stopping 2/2
- ✔ Container sso-keycloak-1  Stopped                                                                                                                0.0s
- ✔ Container sso-postgres-1  Stopped                                                                                                                0.3s
-canceled
-root@opexwise-ui-demo:/var/opt/sso# cat docker-compose.yml
-version: '3'
-services:
-  postgres:
-      image: postgres
-      ports:
-        - 5431:5432
-      volumes:
-        - ./pg_data:/var/lib/postgresql/data
-      environment:
-        POSTGRES_DB: keycloak
-        POSTGRES_USER: iopex
-        POSTGRES_PASSWORD: password
-  keycloak:
-      image: quay.io/keycloak/keycloak:17.0.1
-      environment:
-        KEYCLOAK_FRONTEND_URL: http://13.126.219.64:8008/auth
-        PROXY_ADDRESS_FORWARDING: "true"
-        DB_VENDOR: POSTGRES
-        DB_ADDR: postgres
-        DB_DATABASE: keycloak
-        DB_USER: iopex
-        DB_SCHEMA: public
-        DB_PASSWORD: password
-        KEYCLOAK_USER: admin
-        KEYCLOAK_PASSWORD: admin
-        KEYCLOAK_CORS: "true"
-        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-        #JDBC_PARAMS: "ssl=true"
-      ports:
-        - 8008:8080
-      depends_on:
-        - postgres
-          # command: ["kc.sh", "build", "&&", "kc.sh", "start"]
-          # command: ["sh", "-c", "kc.sh build && kc.sh start"]
+postgres-1  | 2024-06-21 10:08:01.700 UTC [1] LOG:  starting PostgreSQL 16.3 (Debian 16.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2024-06-21 10:08:01.700 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2024-06-21 10:08:01.700 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2024-06-21 10:08:01.710 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2024-06-21 10:08:01.723 UTC [29] LOG:  database system was shut down at 2024-06-21 10:07:55 UTC
+postgres-1  | 2024-06-21 10:08:01.731 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2024-06-21 10:09:29.137 UTC [1] LOG:  received fast shutdown request
+postgres-1  | 2024-06-21 10:09:29.143 UTC [1] LOG:  aborting any active transactions
+postgres-1  | 2024-06-21 10:09:29.145 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+postgres-1  | 2024-06-21 10:09:29.146 UTC [27] LOG:  shutting down
+postgres-1  | 2024-06-21 10:09:29.152 UTC [27] LOG:  checkpoint starting: shutdown immediate
+postgres-1  | 2024-06-21 10:09:29.178 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.011 s, sync=0.003 s, total=0.033 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1954FB8, redo lsn=0/1954FB8
+postgres-1  | 2024-06-21 10:09:29.183 UTC [1] LOG:  database system is shut down
+postgres-1  |
+postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+postgres-1  |
+keycloak-1  | 2024-06-21 10:09:34,737 INFO  [org.keycloak.connections.infinispan.DefaultInfinispanConnectionProviderFactory] (main) Node name: node_437503, Site name: null
+keycloak-1  | 2024-06-21 10:09:35,127 INFO  [io.quarkus] (main) Keycloak 17.0.1 on JVM (powered by Quarkus 2.7.5.Final) started in 4.411s. Listening on: http://0.0.0.0:8080
+keycloak-1  | 2024-06-21 10:09:35,127 INFO  [io.quarkus] (main) Profile dev activated.
+keycloak-1  | 2024-06-21 10:09:35,128 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, jdbc-mariadb, jdbc-mssql, jdbc-mysql, jdbc-oracle, jdbc-postgresql, keycloak, narayana-jta, reactive-routes, resteasy, resteasy-jackson, smallrye-context-propagation, smallrye-health, smallrye-metrics, vault, vertx]
+keycloak-1  | 2024-06-21 10:09:35,129 WARN  [org.keycloak.quarkus.runtime.KeycloakMain] (main) Running the server in development mode. DO NOT use this configuration in production.
+postgres-1  | 2024-06-21 10:09:29.894 UTC [1] LOG:  starting PostgreSQL 16.3 (Debian 16.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2024-06-21 10:09:29.916 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2024-06-21 10:09:29.916 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2024-06-21 10:09:29.925 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2024-06-21 10:09:29.934 UTC [29] LOG:  database system was shut down at 2024-06-21 10:09:29 UTC
+postgres-1  | 2024-06-21 10:09:29.941 UTC [1] LOG:  database system is ready to accept connections
+
