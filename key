@@ -1,22 +1,80 @@
- ✔ Container sso-keycloak-1  Started                                                                                                                0.7s
-root@opexwise-ui-demo:/var/opt/sso# docker-compose ps
+root@opexwise-ui-demo:/var/opt/sso# docker-compose up
 WARN[0000] /var/opt/sso/docker-compose.yml: `version` is obsolete
-NAME             IMAGE      COMMAND                  SERVICE    CREATED          STATUS          PORTS
-sso-postgres-1   postgres   "docker-entrypoint.s…"   postgres   17 seconds ago   Up 15 seconds   0.0.0.0:5431->5432/tcp, :::5431->5432/tcp
-root@opexwise-ui-demo:/var/opt/sso# docker-compose logs
-WARN[0000] /var/opt/sso/docker-compose.yml: `version` is obsolete
-keycloak-1  | Unmatched arguments from index 0: 'sh', '-c', 'kc.sh'
-keycloak-1  | Did you mean: show-config?
-keycloak-1  | Try 'kc.sh --help' for more information on the available options.
+[+] Running 3/3
+ ✔ Network sso_default       Created                                                                                                                0.1s
+ ✔ Container sso-postgres-1  Created                                                                                                                0.1s
+ ✔ Container sso-keycloak-1  Created                                                                                                                0.1s
+Attaching to keycloak-1, postgres-1
 postgres-1  |
 postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
 postgres-1  |
-postgres-1  | 2024-06-21 09:47:40.112 UTC [1] LOG:  starting PostgreSQL 16.3 (Debian 16.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
-postgres-1  | 2024-06-21 09:47:40.112 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-postgres-1  | 2024-06-21 09:47:40.112 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-postgres-1  | 2024-06-21 09:47:40.120 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-postgres-1  | 2024-06-21 09:47:40.131 UTC [29] LOG:  database system was shut down at 2024-06-21 09:45:33 UTC
-postgres-1  | 2024-06-21 09:47:40.139 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2024-06-21 09:56:58.100 UTC [1] LOG:  starting PostgreSQL 16.3 (Debian 16.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2024-06-21 09:56:58.100 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2024-06-21 09:56:58.100 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2024-06-21 09:56:58.111 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2024-06-21 09:56:58.122 UTC [30] LOG:  database system was shut down at 2024-06-21 09:56:28 UTC
+postgres-1  | 2024-06-21 09:56:58.130 UTC [1] LOG:  database system is ready to accept connections
+keycloak-1  | Keycloak - Open Source Identity and Access Management
+keycloak-1  |
+keycloak-1  | Find more information at: https://www.keycloak.org/docs/latest
+keycloak-1  |
+keycloak-1  | Usage:
+keycloak-1  |
+keycloak-1  | kc.sh [OPTIONS] [COMMAND]
+keycloak-1  |
+keycloak-1  | Use this command-line tool to manage your Keycloak cluster.
+keycloak-1  | Make sure the command is available on your "PATH" or prefix it with "./" (e.g.:
+keycloak-1  | "./kc.sh") to execute from the current folder.
+keycloak-1  |
+keycloak-1  | Options:
+keycloak-1  |
+keycloak-1  | -cf, --config-file <file>
+keycloak-1  |                      Set the path to a configuration file. By default, configuration properties are
+keycloak-1  |                        read from the "keycloak.conf" file in the "conf" directory.
+keycloak-1  | -h, --help           This help message.
+keycloak-1  | -v, --verbose        Print out error details when running this command.
+keycloak-1  | -V, --version        Show version information
+keycloak-1  |
+keycloak-1  | Commands:
+keycloak-1  |
+keycloak-1  |   build                   Creates a new and optimized server image.
+keycloak-1  |   start                   Start the server.
+keycloak-1  |   start-dev               Start the server in development mode.
+keycloak-1  |   export                  Export data from realms to a file or directory.
+keycloak-1  |   import                  Import data from a directory or a file.
+keycloak-1  |   show-config             Print out the current configuration.
+keycloak-1  |   tools                   Utilities for use and interaction with the server.
+keycloak-1  |     completion            Generate bash/zsh completion script for kc.sh.
+keycloak-1  |
+keycloak-1  | Examples:
+keycloak-1  |
+keycloak-1  |   Start the server in development mode for local development or testing:
+keycloak-1  |
+keycloak-1  |       $ kc.sh start-dev
+keycloak-1  |
+keycloak-1  |   Building an optimized server runtime:
+keycloak-1  |
+keycloak-1  |       $ kc.sh build <OPTIONS>
+keycloak-1  |
+keycloak-1  |   Start the server in production mode:
+keycloak-1  |
+keycloak-1  |       $ kc.sh start <OPTIONS>
+keycloak-1  |
+keycloak-1  |   Enable auto-completion to bash/zsh:
+keycloak-1  |
+keycloak-1  |       $ source <(kc.sh tools completion)
+keycloak-1  |
+keycloak-1  |   Please, take a look at the documentation for more details before deploying in
+keycloak-1  | production.
+keycloak-1  |
+keycloak-1  | Use "kc.sh start --help" for the available options when starting the server.
+keycloak-1  | Use "kc.sh <command> --help" for more information about other commands.
+keycloak-1 exited with code 0
+^CGracefully stopping... (press Ctrl+C again to force)
+[+] Stopping 2/2
+ ✔ Container sso-keycloak-1  Stopped                                                                                                                0.0s
+ ✔ Container sso-postgres-1  Stopped                                                                                                                0.3s
+canceled
 root@opexwise-ui-demo:/var/opt/sso# cat docker-compose.yml
 version: '3'
 services:
@@ -50,5 +108,5 @@ services:
         - 8008:8080
       depends_on:
         - postgres
-      command: ["sh", "-c", "kc.sh build && kc.sh start"]
-root@opexwise-ui-demo:/var/opt/sso#
+          # command: ["kc.sh", "build", "&&", "kc.sh", "start"]
+          # command: ["sh", "-c", "kc.sh build && kc.sh start"]
