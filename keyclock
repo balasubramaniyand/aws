@@ -1,0 +1,100 @@
+root@opexwise-ui-demo:/var/opt/sso# docker-compose up
+WARN[0000] /var/opt/sso/docker-compose.yml: `version` is obsolete
+[+] Running 2/0
+ ✔ Container sso-postgres-1  Running                                                                                                                0.0s
+ ✔ Container sso-keycloak-1  Created                                                                                                                0.0s
+Attaching to keycloak-1, postgres-1
+keycloak-1  | Keycloak - Open Source Identity and Access Management
+keycloak-1  |
+keycloak-1  | Find more information at: https://www.keycloak.org/docs/latest
+keycloak-1  |
+keycloak-1  | Usage:
+keycloak-1  |
+keycloak-1  | kc.sh [OPTIONS] [COMMAND]
+keycloak-1  |
+keycloak-1  | Use this command-line tool to manage your Keycloak cluster.
+keycloak-1  |
+keycloak-1  | Options:
+keycloak-1  |
+keycloak-1  | -cf, --config-file <file>
+keycloak-1  |                      Set the path to a configuration file. By default, configuration properties are
+keycloak-1  |                        read from the "keycloak.conf" file in the "conf" directory.
+keycloak-1  | -h, --help           This help message.
+keycloak-1  | -v, --verbose        Print out error details when running this command.
+keycloak-1  | -V, --version        Show version information
+keycloak-1  |
+keycloak-1  | Commands:
+keycloak-1  |
+keycloak-1  |   build                   Creates a new and optimized server image.
+keycloak-1  |   start                   Start the server.
+keycloak-1  |   start-dev               Start the server in development mode.
+keycloak-1  |   export                  Export data from realms to a file or directory.
+keycloak-1  |   import                  Import data from a directory or a file.
+keycloak-1  |   show-config             Print out the current configuration.
+keycloak-1  |   tools                   Utilities for use and interaction with the server.
+keycloak-1  |     completion            Generate bash/zsh completion script for kc.sh.
+keycloak-1  |
+keycloak-1  | Examples:
+keycloak-1  |
+keycloak-1  |   Start the server in development mode for local development or testing:
+keycloak-1  |
+keycloak-1  |       $ kc.sh start-dev
+keycloak-1  |
+keycloak-1  |   Building an optimized server runtime:
+keycloak-1  |
+keycloak-1  |       $ kc.sh build <OPTIONS>
+keycloak-1  |
+keycloak-1  |   Start the server in production mode:
+keycloak-1  |
+keycloak-1  |       $ kc.sh start <OPTIONS>
+keycloak-1  |
+keycloak-1  |   Enable auto-completion to bash/zsh:
+keycloak-1  |
+keycloak-1  |       $ source <(kc.sh tools completion)
+keycloak-1  |
+keycloak-1  |   Please, take a look at the documentation for more details before deploying in
+keycloak-1  | production.
+keycloak-1  |
+keycloak-1  | Use "kc.sh start --help" for the available options when starting the server.
+keycloak-1  | Use "kc.sh <command> --help" for more information about other commands.
+keycloak-1 exited with code 0
+^CGracefully stopping... (press Ctrl+C again to force)
+[+] Stopping 2/2
+ ✔ Container sso-keycloak-1  Stopped                                                                                                                0.0s
+ ✔ Container sso-postgres-1  Stopped                                                                                                                0.3s
+canceled
+root@opexwise-ui-demo:/var/opt/sso# cat docker-compose.yml
+version: '3'
+services:
+  postgres:
+      image: postgres
+      ports:
+        - 5431:5432
+      volumes:
+        - ./pg_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: iopex
+        POSTGRES_PASSWORD: password
+  keycloak:
+      image: quay.io/keycloak/keycloak:latest
+      environment:
+        KEYCLOAK_FRONTEND_URL: http://13.126.129.64:8008/auth
+          # PROXY_ADDRESS_FORWARDING: "true"
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: iopex
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+        KEYCLOAK_CORS: "true"
+        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+        #JDBC_PARAMS: "ssl=true"
+      ports:
+        - 8080:8080
+      depends_on:
+        - postgres
+
+root@opexwise-ui-demo:/var/opt/sso#
