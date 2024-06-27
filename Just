@@ -1,129 +1,432 @@
-import logging
-import os
-from celery.schedules import crontab
-from flask_caching.backends.filesystem import FileSystemCache
-
-logger = logging.getLogger()
-
-# Database configuration
-DATABASE_DIALECT = os.getenv("DATABASE_DIALECT")
-DATABASE_USER = os.getenv("DATABASE_USER")
-DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
-DATABASE_HOST = os.getenv("DATABASE_HOST")
-DATABASE_PORT = os.getenv("DATABASE_PORT")
-DATABASE_DB = os.getenv("DATABASE_DB")
-
-EXAMPLES_USER = os.getenv("EXAMPLES_USER")
-EXAMPLES_PASSWORD = os.getenv("EXAMPLES_PASSWORD")
-EXAMPLES_HOST = os.getenv("EXAMPLES_HOST")
-EXAMPLES_PORT = os.getenv("EXAMPLES_PORT")
-EXAMPLES_DB = os.getenv("EXAMPLES_DB")
-
-SQLALCHEMY_DATABASE_URI = (
-    f"{DATABASE_DIALECT}://"
-    f"{DATABASE_USER}:{DATABASE_PASSWORD}@"
-    f"{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_DB}"
-)
-SQLALCHEMY_EXAMPLES_URI = (
-    f"{DATABASE_DIALECT}://"
-    f"{EXAMPLES_USER}:{EXAMPLES_PASSWORD}@"
-    f"{EXAMPLES_HOST}:{EXAMPLES_PORT}/{EXAMPLES_DB}"
-)
-
-# Redis configuration
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
-REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-REDIS_CELERY_DB = os.getenv("REDIS_CELERY_DB", "0")
-REDIS_RESULTS_DB = os.getenv("REDIS_RESULTS_DB", "1")
-
-# Cache configuration
-RESULTS_BACKEND = FileSystemCache("/var/opt/superset/sqllab_cache")
-
-CACHE_CONFIG = {
-    "CACHE_TYPE": "RedisCache",
-    "CACHE_DEFAULT_TIMEOUT": 300,
-    "CACHE_KEY_PREFIX": "superset_",
-    "CACHE_REDIS_HOST": REDIS_HOST,
-    "CACHE_REDIS_PORT": REDIS_PORT,
-    "CACHE_REDIS_DB": REDIS_RESULTS_DB,
-}
-DATA_CACHE_CONFIG = CACHE_CONFIG
-
-# Celery configuration
-class CeleryConfig(object):
-    BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
-    CELERY_IMPORTS = ("superset.sql_lab", "superset.tasks")
-    CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_RESULTS_DB}"
-    CELERYD_LOG_LEVEL = "DEBUG"
-    CELERYD_PREFETCH_MULTIPLIER = 1
-    CELERY_ACKS_LATE = False
-    CELERYD_TASK_SOFT_TIME_LIMIT = 600  # 10 minutes
-    CELERYD_TASK_TIME_LIMIT = 1200  # 20 minutes
-    CELERYBEAT_SCHEDULE = {
-        "reports.scheduler": {
-            "task": "reports.scheduler",
-            "schedule": crontab(minute="*", hour="*"),
-        },
-        "reports.prune_log": {
-            "task": "reports.prune_log",
-            "schedule": crontab(minute=10, hour=0),
-        },
-    }
-
-CELERY_CONFIG = CeleryConfig
-
-# SMTP email configuration
-SMTP_HOST = "smtp.gmail.com"  # Replace with your SMTP server
-SMTP_PORT = 587  # Replace with your SMTP port, e.g., 587
-SMTP_STARTTLS = True
-SMTP_SSL_SERVER_AUTH = True  # Set to True if your SMTP server requires SSL/TLS
-SMTP_SSL = False
-SMTP_USER = "iopexdashboard@gmail.com"  # Replace with your SMTP username
-SMTP_PASSWORD = "vxcjhrfvuylgwfcb"  # Replace with your SMTP password
-SMTP_MAIL_FROM = "iopexdashboard@gmail.com"  # Replace with your sender email address
-EMAIL_REPORTS_SUBJECT_PREFIX = "[Superset] "  # Optional subject prefix for email reports
-
-# Webdriver configuration
-WEBDRIVER_BASEURL = "http://13.126.219.64:8088/"  # Replace with your Superset base URL
-WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL  # Base URL for email report hyperlinks
-
-# Additional configurations
-ENABLE_CORS = True
-PREFERRED_URL_SCHEME = 'https'
-SUPERSET_WEBSERVER_PROTOCOL = "https"
-SESSION_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_HTTPONLY = False
-WTF_CSRF_ENABLED = False
-ENABLE_PROXY_FIX = True
-PROXY_FIX_CONFIG = {"x_for": 1, "x_proto": 1, "x_host": 1, "x_port": 0, "x_prefix": 1}
-TEMPLATES_EXTENSIONS = ['superset_jinja2_ext']
-LOGIN_REDIRECT_URL = '/login'
-DISABLED_TOP_LEVEL_NAV_ITEMS = ['Dashboards', 'Charts', 'Data', 'Settings', 'Datasets']
-FEATURE_FLAGS = {"ALERT_REPORTS": True}
-ALERT_REPORTS_NOTIFICATION_DRY_RUN = False
-WEBDRIVER_TYPE = "chrome"
-WEBDRIVER_OPTION_ARGS = [
-     "--force-device-scale-factor=2.0",
-     "--high-dpi-support=2.0",
-     "--headless",
-     "--disable-gpu",
-     "--disable-dev-shm-usage",
-     "--no-sandbox",
-     "--disable-setuid-sandbox",
-     "--disable-extensions",
-]
-
-SQLLAB_CTAS_NO_LIMIT = True
-
-# Optionally import superset_config_docker.py (which will have been included on
-# the PYTHONPATH) in order to allow for local settings to be overridden
-try:
-    import superset_config_docker
-    from superset_config_docker import *  # noqa
-
-    logger.info(
-        f"Loaded your Docker configuration at " f"[{superset_config_docker.__file__}]"
-    )
-except ImportError:
-    logger.info("Using default Docker config...")
+Attaching to superset_app, superset_cache, superset_db, superset_init, superset_worker, superset_worker_beat
+superset_db           |
+superset_db           | PostgreSQL Database directory appears to contain a database; Skipping initialization
+superset_db           |
+superset_cache        | 1:C 27 Jun 2024 04:40:06.901 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+superset_cache        | 1:C 27 Jun 2024 04:40:06.901 # WARNING Your system is configured to use the 'xen' clocksource which might lead to degraded performance. Check the result of the [slow-clocksource] system check: run 'redis-server --check-system' to check if the system's clocksource isn't degrading performance.
+superset_cache        | 1:C 27 Jun 2024 04:40:06.901 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+superset_cache        | 1:C 27 Jun 2024 04:40:06.901 * Redis version=7.2.5, bits=64, commit=00000000, modified=0, pid=1, just started
+superset_cache        | 1:C 27 Jun 2024 04:40:06.901 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * monotonic clock: POSIX clock_gettime
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * Running mode=standalone, port=6379.
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * Server initialized
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * Loading RDB produced by version 7.2.5
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * RDB age 55 seconds
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * RDB memory usage when created 0.83 Mb
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * Done loading RDB, keys loaded: 11, keys expired: 0.
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * DB loaded from disk: 0.000 seconds
+superset_cache        | 1:M 27 Jun 2024 04:40:06.902 * Ready to accept connections tcp
+superset_db           | 2024-06-27 04:40:06.923 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+superset_db           | 2024-06-27 04:40:06.923 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+superset_db           | 2024-06-27 04:40:06.932 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+superset_db           | 2024-06-27 04:40:07.081 UTC [26] LOG:  database system was shut down at 2024-06-27 04:39:11 UTC
+superset_db           | 2024-06-27 04:40:07.098 UTC [1] LOG:  database system is ready to accept connections
+superset_app          | Skipping local overrides
+superset_app          | Starting web app...
+superset_init         | Skipping local overrides
+superset_init         | Unknown Operation!!!
+superset_init         |
+superset_init         | ######################################################################
+superset_init         |
+superset_init         |
+superset_init         | Init Step 1/4 [Starting] -- Applying DB migrations
+superset_init         |
+superset_init         |
+superset_init         | ######################################################################
+superset_init         |
+superset_worker       | Skipping local overrides
+superset_worker       | Starting Celery worker...
+superset_worker_beat  | Skipping local overrides
+superset_worker_beat  | Starting Celery beat...
+superset_app          | [2024-06-27 04:40:07 +0000] [8] [INFO] Starting gunicorn 20.1.0
+superset_app          | [2024-06-27 04:40:07 +0000] [8] [INFO] Listening at: http://0.0.0.0:8088 (8)
+superset_app          | [2024-06-27 04:40:07 +0000] [8] [INFO] Using worker: gthread
+superset_app          | [2024-06-27 04:40:07 +0000] [10] [INFO] Booting worker with pid: 10
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:09 +0000] [10] [INFO] Worker exiting (pid: 10)
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       |                                     WARNING
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker       | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker       | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | Refusing to start due to insecure SECRET_KEY
+superset_worker       | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | [2024-06-27 04:40:09 +0000] [15] [INFO] Booting worker with pid: 15
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  |                                     WARNING
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker_beat  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker_beat  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | Refusing to start due to insecure SECRET_KEY
+superset_worker_beat  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_init         | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_init         | --------------------------------------------------------------------------------
+superset_init         |                                     WARNING
+superset_init         | --------------------------------------------------------------------------------
+superset_init         | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_init         | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_init         | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_init         | --------------------------------------------------------------------------------
+superset_init         | --------------------------------------------------------------------------------
+superset_init         | Refusing to start due to insecure SECRET_KEY
+superset_worker exited with code 0
+superset_worker_beat exited with code 0
+superset_init exited with code 1
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:11 +0000] [15] [INFO] Worker exiting (pid: 15)
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | [2024-06-27 04:40:11 +0000] [20] [INFO] Booting worker with pid: 20
+superset_worker       | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       |                                     WARNING
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker       | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker       | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | Refusing to start due to insecure SECRET_KEY
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  |                                     WARNING
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker_beat  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker_beat  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | Refusing to start due to insecure SECRET_KEY
+superset_worker_beat  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:13 +0000] [20] [INFO] Worker exiting (pid: 20)
+superset_worker exited with code 0
+superset_worker_beat exited with code 0
+superset_app          | [2024-06-27 04:40:13 +0000] [25] [INFO] Booting worker with pid: 25
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:15 +0000] [25] [INFO] Worker exiting (pid: 25)
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       |                                     WARNING
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker       | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker       | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker       | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:15 +0000] [30] [INFO] Booting worker with pid: 30
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  |                                     WARNING
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker_beat  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker_beat  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | Refusing to start due to insecure SECRET_KEY
+superset_worker_beat  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker exited with code 1
+superset_worker_beat exited with code 1
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:17 +0000] [30] [INFO] Worker exiting (pid: 30)
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | [2024-06-27 04:40:17 +0000] [35] [INFO] Booting worker with pid: 35
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       |                                     WARNING
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker       | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker       | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker       | Refusing to start due to insecure SECRET_KEY
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  |                                     WARNING
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker_beat  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker_beat  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | Refusing to start due to insecure SECRET_KEY
+superset_worker_beat  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:19 +0000] [35] [INFO] Worker exiting (pid: 35)
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | [2024-06-27 04:40:19 +0000] [40] [INFO] Booting worker with pid: 40
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:21 +0000] [40] [INFO] Worker exiting (pid: 40)
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | [2024-06-27 04:40:21 +0000] [45] [INFO] Booting worker with pid: 45
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       |                                     WARNING
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker       | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker       | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | Refusing to start due to insecure SECRET_KEY
+superset_worker       | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  |                                     WARNING
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker_beat  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker_beat  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | --------------------------------------------------------------------------------
+superset_worker_beat  | Refusing to start due to insecure SECRET_KEY
+superset_worker_beat  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | --------------------------------------------------------------------------------
+superset_app          |                                     WARNING
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_app          | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_app          | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | --------------------------------------------------------------------------------
+superset_app          | Refusing to start due to insecure SECRET_KEY
+superset_app          | [2024-06-27 04:40:22 +0000] [45] [INFO] Worker exiting (pid: 45)
+superset_app          | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_app          | [2024-06-27 04:40:23 +0000] [50] [INFO] Booting worker with pid: 50
+^CGracefully stopping... (press Ctrl+C again to force)
+[+] Stopping 6/6
+ ✔ Container superset_worker_beat  Stopped                                                                                                          2.7s
+ ✔ Container superset_app          Stopped                                                                                                         10.3s
+ ✔ Container superset_init         Stopped                                                                                                          0.0s
+ ✔ Container superset_worker       Stopped                                                                                                          2.6s
+ ✔ Container superset_db           Stopped                                                                                                          0.3s
+ ✔ Container superset_cache        Stopped                                                                                                          0.3s
+canceled
+root@opexwise-ui-demo:/var/opt/superset/superset# docker-compose up -d
+WARN[0000] /var/opt/superset/superset/docker-compose.yml: `version` is obsolete
+[+] Running 6/6
+ ✔ Container superset_db           Started                                                                                                          0.4s
+ ✔ Container superset_cache        Started                                                                                                          0.4s
+ ✔ Container superset_worker       Started                                                                                                          1.0s
+ ✔ Container superset_worker_beat  Started                                                                                                          0.9s
+ ✔ Container superset_app          Started                                                                                                          0.9s
+ ✔ Container superset_init         Started                                                                                                          0.9s
+root@opexwise-ui-demo:/var/opt/superset/superset# docker-compose restart
+WARN[0000] /var/opt/superset/superset/docker-compose.yml: `version` is obsolete
+[+] Restarting 6/6
+ ✔ Container superset_cache        Started                                                                                                          1.3s
+ ✔ Container superset_db           Started                                                                                                          1.2s
+ ✔ Container superset_worker       Started                                                                                                          2.6s
+ ✔ Container superset_init         Started                                                                                                          0.6s
+ ✔ Container superset_worker_beat  Started                                                                                                          2.4s
+ ✔ Container superset_app          Started                                                                                                         10.8s
+root@opexwise-ui-demo:/var/opt/superset/superset# docker-compose logs -f
+WARN[0000] /var/opt/superset/superset/docker-compose.yml: `version` is obsolete
+superset_db     |
+superset_db     | PostgreSQL Database directory appears to contain a database; Skipping initialization
+superset_db     |
+superset_db     | 2024-06-27 04:40:06.923 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+superset_db     | 2024-06-27 04:40:06.923 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+superset_db     | 2024-06-27 04:40:06.932 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+superset_db     | 2024-06-27 04:40:07.081 UTC [26] LOG:  database system was shut down at 2024-06-27 04:39:11 UTC
+superset_db     | 2024-06-27 04:40:07.098 UTC [1] LOG:  database system is ready to accept connections
+superset_db     | 2024-06-27 04:40:34.718 UTC [1] LOG:  received fast shutdown request
+superset_db     | 2024-06-27 04:40:34.723 UTC [1] LOG:  aborting any active transactions
+superset_db     | 2024-06-27 04:40:34.726 UTC [1] LOG:  worker process: logical replication launcher (PID 32) exited with exit code 1
+superset_db     | 2024-06-27 04:40:34.727 UTC [27] LOG:  shutting down
+superset_db     | 2024-06-27 04:40:34.759 UTC [1] LOG:  database system is shut down
+superset_db     |
+superset_db     | PostgreSQL Database directory appears to contain a database; Skipping initialization
+superset_db     |
+superset_db     | 2024-06-27 04:40:38.509 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+superset_cache  | 1:C 27 Jun 2024 04:40:06.901 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+superset_cache  | 1:C 27 Jun 2024 04:40:06.901 # WARNING Your system is configured to use the 'xen' clocksource which might lead to degraded performance. Check the result of the [slow-clocksource] system check: run 'redis-server --check-system' to check if the system's clocksource isn't degrading performance.
+superset_cache  | 1:C 27 Jun 2024 04:40:06.901 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+superset_cache  | 1:C 27 Jun 2024 04:40:06.901 * Redis version=7.2.5, bits=64, commit=00000000, modified=0, pid=1, just started
+superset_cache  | 1:C 27 Jun 2024 04:40:06.901 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * monotonic clock: POSIX clock_gettime
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * Running mode=standalone, port=6379.
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * Server initialized
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * Loading RDB produced by version 7.2.5
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * RDB age 55 seconds
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * RDB memory usage when created 0.83 Mb
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * Done loading RDB, keys loaded: 11, keys expired: 0.
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * DB loaded from disk: 0.000 seconds
+superset_cache  | 1:M 27 Jun 2024 04:40:06.902 * Ready to accept connections tcp
+superset_cache  | 1:signal-handler (1719463234) Received SIGTERM scheduling shutdown...
+superset_cache  | 1:M 27 Jun 2024 04:40:34.760 * User requested shutdown...
+superset_cache  | 1:M 27 Jun 2024 04:40:34.760 * Saving the final RDB snapshot before exiting.
+superset_cache  | 1:M 27 Jun 2024 04:40:34.768 * DB saved on disk
+superset_cache  | 1:M 27 Jun 2024 04:40:34.768 # Redis is now ready to exit, bye bye...
+superset_cache  | 1:C 27 Jun 2024 04:40:38.339 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+superset_cache  | 1:C 27 Jun 2024 04:40:38.339 # WARNING Your system is configured to use the 'xen' clocksource which might lead to degraded performance. Check the result of the [slow-clocksource] system check: run 'redis-server --check-system' to check if the system's clocksource isn't degrading performance.
+superset_cache  | 1:C 27 Jun 2024 04:40:38.339 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+superset_cache  | 1:C 27 Jun 2024 04:40:38.339 * Redis version=7.2.5, bits=64, commit=00000000, modified=0, pid=1, just started
+superset_cache  | 1:C 27 Jun 2024 04:40:38.339 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+superset_cache  | 1:M 27 Jun 2024 04:40:38.340 * monotonic clock: POSIX clock_gettime
+superset_cache  | 1:M 27 Jun 2024 04:40:38.340 * Running mode=standalone, port=6379.
+superset_cache  | 1:M 27 Jun 2024 04:40:38.345 * Server initialized
+superset_cache  | 1:M 27 Jun 2024 04:40:38.345 * Loading RDB produced by version 7.2.5
+superset_cache  | 1:M 27 Jun 2024 04:40:38.345 * RDB age 4 seconds
+superset_cache  | 1:M 27 Jun 2024 04:40:38.345 * RDB memory usage when created 0.83 Mb
+superset_cache  | 1:M 27 Jun 2024 04:40:38.345 * Done loading RDB, keys loaded: 11, keys expired: 0.
+superset_cache  | 1:M 27 Jun 2024 04:40:38.345 * DB loaded from disk: 0.000 seconds
+superset_cache  | 1:M 27 Jun 2024 04:40:38.345 * Ready to accept connections tcp
+superset_cache  | 1:signal-handler (1719463248) Received SIGTERM scheduling shutdown...
+superset_cache  | 1:M 27 Jun 2024 04:40:48.900 * User requested shutdown...
+superset_cache  | 1:M 27 Jun 2024 04:40:48.900 * Saving the final RDB snapshot before exiting.
+superset_cache  | 1:M 27 Jun 2024 04:40:48.909 * DB saved on disk
+superset_cache  | 1:M 27 Jun 2024 04:40:48.910 # Redis is now ready to exit, bye bye...
+superset_cache  | 1:C 27 Jun 2024 04:40:50.074 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+superset_cache  | 1:C 27 Jun 2024 04:40:50.076 # WARNING Your system is configured to use the 'xen' clocksource which might lead to degraded performance. Check the result of the [slow-clocksource] system check: run 'redis-server --check-system' to check if the system's clocksource isn't degrading performance.
+superset_cache  | 1:C 27 Jun 2024 04:40:50.076 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+superset_cache  | 1:C 27 Jun 2024 04:40:50.076 * Redis version=7.2.5, bits=64, commit=00000000, modified=0, pid=1, just started
+superset_cache  | 1:C 27 Jun 2024 04:40:50.076 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+superset_cache  | 1:M 27 Jun 2024 04:40:50.077 * monotonic clock: POSIX clock_gettime
+superset_cache  | 1:M 27 Jun 2024 04:40:50.087 * Running mode=standalone, port=6379.
+superset_cache  | 1:M 27 Jun 2024 04:40:50.090 * Server initialized
+superset_cache  | 1:M 27 Jun 2024 04:40:50.090 * Loading RDB produced by version 7.2.5
+superset_cache  | 1:M 27 Jun 2024 04:40:50.090 * RDB age 2 seconds
+superset_cache  | 1:M 27 Jun 2024 04:40:50.091 * RDB memory usage when created 0.83 Mb
+superset_cache  | 1:M 27 Jun 2024 04:40:50.091 * Done loading RDB, keys loaded: 11, keys expired: 0.
+superset_cache  | 1:M 27 Jun 2024 04:40:50.091 * DB loaded from disk: 0.000 seconds
+superset_cache  | 1:M 27 Jun 2024 04:40:50.091 * Ready to accept connections tcp
+superset_db     | 2024-06-27 04:40:38.509 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+superset_db     | 2024-06-27 04:40:38.519 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+superset_db     | 2024-06-27 04:40:38.547 UTC [28] LOG:  database system was shut down at 2024-06-27 04:40:34 UTC
+superset_db     | 2024-06-27 04:40:38.562 UTC [1] LOG:  database system is ready to accept connections
+superset_db     | 2024-06-27 04:40:48.831 UTC [1] LOG:  received fast shutdown request
+superset_db     | 2024-06-27 04:40:48.836 UTC [1] LOG:  aborting any active transactions
+superset_db     | 2024-06-27 04:40:48.841 UTC [1] LOG:  worker process: logical replication launcher (PID 34) exited with exit code 1
+superset_db     | 2024-06-27 04:40:48.841 UTC [29] LOG:  shutting down
+superset_db     | 2024-06-27 04:40:48.897 UTC [1] LOG:  database system is shut down
+superset_db     |
+superset_db     | PostgreSQL Database directory appears to contain a database; Skipping initialization
+superset_db     |
+superset_db     | 2024-06-27 04:40:50.053 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+superset_db     | 2024-06-27 04:40:50.053 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+superset_db     | 2024-06-27 04:40:50.061 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+superset_db     | 2024-06-27 04:40:50.090 UTC [26] LOG:  database system was shut down at 2024-06-27 04:40:48 UTC
+superset_db     | 2024-06-27 04:40:50.099 UTC [1] LOG:  database system is ready to accept connections
+superset_worker  | Skipping local overrides
+superset_worker  | Starting Celery worker...
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  |                                     WARNING
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | Refusing to start due to insecure SECRET_KEY
+superset_worker  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker  | Skipping local overrides
+superset_worker  | Starting Celery worker...
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  |                                     WARNING
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | Refusing to start due to insecure SECRET_KEY
+superset_worker  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker  | Skipping local overrides
+superset_worker  | Starting Celery worker...
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  |                                     WARNING
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | Refusing to start due to insecure SECRET_KEY
+superset_worker  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker  | Skipping local overrides
+superset_worker  | Starting Celery worker...
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  |                                     WARNING
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker  | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker  | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | --------------------------------------------------------------------------------
+superset_worker  | Refusing to start due to insecure SECRET_KEY
+superset_worker  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker  | Skipping local overrides
+superset_worker       | Starting Celery worker...
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       |                                     WARNING
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | A Default SECRET_KEY was detected, please use superset_config.py to override it.
+superset_worker       | Use a strong complex alphanumeric string and use a tool to help you generate
+superset_worker       | a sufficiently random sequence, ex: openssl rand -base64 42
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | --------------------------------------------------------------------------------
+superset_worker       | Refusing to start due to insecure SECRET_KEY
+superset_worker       | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_conf
