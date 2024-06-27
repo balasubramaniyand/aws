@@ -1,0 +1,112 @@
+WARN[0000] /var/opt/superset/superset/docker-compose.yml: `version` is obsolete
+superset_db           |
+superset_db           | PostgreSQL Database directory appears to contain a database; Skipping initialization
+superset_db           |
+superset_db           | 2024-06-27 03:58:47.003 UTC [1] LOG:  starting PostgreSQL 15.7 (Debian 15.7-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+superset_db           | 2024-06-27 03:58:47.023 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+superset_db           | 2024-06-27 03:58:47.023 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+superset_db           | 2024-06-27 03:58:47.036 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+superset_db           | 2024-06-27 03:58:47.048 UTC [29] LOG:  database system was shut down at 2024-06-27 03:56:54 UTC
+superset_db           | 2024-06-27 03:58:47.064 UTC [1] LOG:  database system is ready to accept connections
+superset_cache        | 1:C 27 Jun 2024 03:58:46.820 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+superset_cache        | 1:C 27 Jun 2024 03:58:46.820 # WARNING Your system is configured to use the 'xen' clocksource which might lead to degraded performance. Check the result of the [slow-clocksource] system check: run 'redis-server --check-system' to check if the system's clocksource isn't degrading performance.
+superset_cache        | 1:C 27 Jun 2024 03:58:46.820 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+superset_cache        | 1:C 27 Jun 2024 03:58:46.820 * Redis version=7.2.5, bits=64, commit=00000000, modified=0, pid=1, just started
+superset_cache        | 1:C 27 Jun 2024 03:58:46.820 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+superset_cache        | 1:M 27 Jun 2024 03:58:46.820 * monotonic clock: POSIX clock_gettime
+superset_cache        | 1:M 27 Jun 2024 03:58:46.820 * Running mode=standalone, port=6379.
+superset_cache        | 1:M 27 Jun 2024 03:58:46.822 * Server initialized
+superset_cache        | 1:M 27 Jun 2024 03:58:46.822 * Loading RDB produced by version 7.2.5
+superset_cache        | 1:M 27 Jun 2024 03:58:46.822 * RDB age 112 seconds
+superset_cache        | 1:M 27 Jun 2024 03:58:46.822 * RDB memory usage when created 1.33 Mb
+superset_cache        | 1:M 27 Jun 2024 03:58:46.823 * Done loading RDB, keys loaded: 1520, keys expired: 4.
+superset_cache        | 1:M 27 Jun 2024 03:58:46.823 * DB loaded from disk: 0.002 seconds
+superset_cache        | 1:M 27 Jun 2024 03:58:46.823 * Ready to accept connections tcp
+superset_worker_beat  | Skipping local overrides
+superset_worker_beat  | Starting Celery beat...
+superset_init         | Skipping local overrides
+superset_init         | Unknown Operation!!!
+superset_init         |
+superset_worker_beat  | 2024-06-27 03:58:49,637:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_init         | ######################################################################
+superset_init         |
+superset_init         |
+superset_init         | Init Step 1/4 [Starting] -- Applying DB migrations
+superset_init         |
+superset_app          | Skipping local overrides
+superset_app          | Starting web app...
+superset_init         |
+superset_init         | ######################################################################
+superset_init         |
+superset_init         | 2024-06-27 03:58:49,895:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_init         | 2024-06-27 03:58:49,901:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_init         | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_init         |   warnings.warn(
+superset_worker_beat  | 2024-06-27 03:58:49,638:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_worker_beat  | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_worker_beat  |   warnings.warn(
+superset_app          | [2024-06-27 03:58:47 +0000] [8] [INFO] Starting gunicorn 21.2.0
+superset_app          | [2024-06-27 03:58:47 +0000] [8] [INFO] Listening at: http://0.0.0.0:8088 (8)
+superset_app          | [2024-06-27 03:58:47 +0000] [8] [INFO] Using worker: gthread
+superset_app          | [2024-06-27 03:58:47 +0000] [9] [INFO] Booting worker with pid: 9
+superset_app          | 2024-06-27 03:58:49,597:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_app          | 2024-06-27 03:58:49,601:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_app          | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_app          |   warnings.warn(
+superset_worker       | Skipping local overrides
+superset_worker       | Starting Celery worker...
+superset_worker       | 2024-06-27 03:58:49,676:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_worker       | 2024-06-27 03:58:49,677:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_worker       | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_worker       |   warnings.warn(
+
+
+
+
+
+superset_app          | [2024-06-27 03:59:47 +0000] [8] [CRITICAL] WORKER TIMEOUT (pid:9)
+superset_app          | [2024-06-27 03:59:48 +0000] [8] [ERROR] Worker (pid:9) was sent SIGKILL! Perhaps out of memory?
+superset_app          | [2024-06-27 03:59:48 +0000] [25] [INFO] Booting worker with pid: 25
+superset_app          | 2024-06-27 03:59:50,178:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_app          | 2024-06-27 03:59:50,182:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_app          | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_app          |   warnings.warn(
+
+
+
+
+
+superset_app          | [2024-06-27 04:00:48 +0000] [8] [CRITICAL] WORKER TIMEOUT (pid:25)
+superset_app          | [2024-06-27 04:00:49 +0000] [8] [ERROR] Worker (pid:25) was sent SIGKILL! Perhaps out of memory?
+superset_app          | [2024-06-27 04:00:49 +0000] [42] [INFO] Booting worker with pid: 42
+superset_app          | 2024-06-27 04:00:51,330:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_app          | 2024-06-27 04:00:51,336:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_app          | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_app          |   warnings.warn(
+superset_worker       | 2024-06-27 04:01:04,300:ERROR:flask_appbuilder.security.sqla.manager:DB Creation and initialization failed: (psycopg2.OperationalError) connection to server at "13.126.219.64", port 8005 failed: Connection timed out
+superset_worker       |         Is the server running on that host and accepting TCP/IP connections?
+superset_worker       |
+superset_worker       | (Background on this error at: https://sqlalche.me/e/14/e3q8)
+superset_worker       | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_worker_beat  | 2024-06-27 04:01:04,300:ERROR:flask_appbuilder.security.sqla.manager:DB Creation and initialization failed: (psycopg2.OperationalError) connection to server at "13.126.219.64", port 8005 failed: Connection timed out
+superset_worker_beat  |         Is the server running on that host and accepting TCP/IP connections?
+superset_worker_beat  |
+superset_worker_beat  | (Background on this error at: https://sqlalche.me/e/14/e3q8)
+superset_worker_beat  | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_init         | 2024-06-27 04:01:04,300:ERROR:flask_appbuilder.security.sqla.manager:DB Creation and initialization failed: (psycopg2.OperationalError) connection to server at "13.126.219.64", port 8005 failed: Connection timed out
+superset_init         |         Is the server running on that host and accepting TCP/IP connections?
+superset_init         |
+superset_init         | (Background on this error at: https://sqlalche.me/e/14/e3q8)
+superset_init         | Loaded your LOCAL configuration at [/app/docker/pythonpath_dev/superset_config.py]
+superset_init exited with code 1
+superset_worker_beat exited with code 0
+superset_worker exited with code 0
+superset_worker       | 2024-06-27 04:01:07,062:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_worker       | 2024-06-27 04:01:07,065:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_worker       | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_worker       |   warnings.warn(
+superset_worker_beat  | 2024-06-27 04:01:07,096:INFO:superset.utils.logging_configurator:logging was configured successfully
+superset_worker_beat  | 2024-06-27 04:01:07,097:INFO:root:Configured event logger of type <class 'superset.utils.log.DBEventLogger'>
+superset_worker_beat  | /usr/local/lib/python3.10/site-packages/flask_limiter/extension.py:293: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+superset_worker_beat  |   warnings.warn(
+
